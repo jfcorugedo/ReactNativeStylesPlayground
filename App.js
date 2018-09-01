@@ -1,26 +1,34 @@
 import React from 'react';
-import {StyleSheet, Text, View, Image, Platform} from 'react-native';
+import {StyleSheet, Text, View, Image, Platform, TouchableHighlight} from 'react-native';
 
 
-const ProfileCard = ({avatarImage = require('./avatar.jpg')}) => {
+const ProfileCard = ({avatarImage = require('./avatar.jpg'), showThumbnail = false, onPress}) => {
     console.log('rendering profile card....');
+
+    let containerStyles = null;
+    if(showThumbnail) {
+        containerStyles = card.cardThumbnail;
+    }
+
     return (
-        <View style={card.container}>
-            <View style={card.avatar}>
-                <Image
-                    resizeMode="cover"
-                    style={{flex:1, height: undefined, width: undefined, borderRadius:30}}
-                    source={avatarImage} />
+        <TouchableHighlight onPress={onPress} style={containerStyles}>
+            <View style={card.container}>
+                <View style={card.avatar}>
+                    <Image
+                        resizeMode="cover"
+                        style={{flex:1, height: undefined, width: undefined, borderRadius:30}}
+                        source={avatarImage} />
+                </View>
+                <View style={{flex: 0, alignItems: 'center', paddingLeft:20, paddingRight: 20}}>
+                    <Text style={{color: 'white', fontWeight: 'bold', padding: 5}}>Juan Corugedo</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 12}}>Software developer</Text>
+                    <Text style={{fontSize: 10, fontStyle: 'italic', textAlign: 'justify'}}>
+                        I'm a software developer who knows how to create
+                        native applications using React Native
+                    </Text>
+                </View>
             </View>
-            <View style={{flex: 0, alignItems: 'center', paddingLeft:20, paddingRight: 20}}>
-                <Text style={{color: 'white', fontWeight: 'bold', padding: 5}}>Juan Corugedo</Text>
-                <Text style={{fontWeight: 'bold', fontSize: 12}}>Software developer</Text>
-                <Text style={{fontSize: 10, fontStyle: 'italic', textAlign: 'justify'}}>
-                    I'm a software developer who knows how to create
-                    native applications using React Native
-                </Text>
-            </View>
-        </View>
+        </TouchableHighlight>
     );
 };
 
@@ -60,14 +68,24 @@ const card = StyleSheet.create({
                 },
             }
         ),
-    }
+    },
+    cardThumbnail: {
+        transform: [{scale: 0.2}],
+    },
 });
 
 export default class App extends React.Component {
+
+    constructor() {
+        super();
+        this.state = {
+            thumbnail: false
+        };
+    }
     render() {
         return (
             <View style={styles.container}>
-                <ProfileCard/>
+                <ProfileCard showThumbnail={this.state.thumbnail} onPress={() => this.setState({thumbnail: !this.state.thumbnail})}/>
             </View>
         );
     }
